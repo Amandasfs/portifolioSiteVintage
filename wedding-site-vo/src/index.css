@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Mea Culpa';
+  src: url('./assets/fonts/Mea_Culpa/MeaCulpa-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'League Script';
+  src: url('./assets/fonts/League_Script/LeagueScript-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Julius Sans One';
+  src: url('./assets/fonts/Julius_Sans_One/JuliusSansOne-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+@layer base {
+  h1, h2, h3 {
+    @apply font-romantic;
+  }
+  p{
+    @apply font-sans;
+  }
+}
