@@ -86,9 +86,9 @@ export default function DetailsSection() {
     backgroundColor: "#30190541",
     backgroundImage: `
       url('https://www.transparenttextures.com/patterns/snow.png'),
-      linear-gradient(to bottom, #4d6648b6, #eec881d3)
+      radial-gradient(circle, rgba(255,217,182,0.7) 0%, rgba(102,89,65,0.83) 100%, rgba(66, 58, 42, 0.83) 100%)
     `,
-    backgroundBlendMode: "multiply",
+        backgroundBlendMode: "multiply",
     backgroundSize: "cover, cover",
     position: "relative" as const,
   };
