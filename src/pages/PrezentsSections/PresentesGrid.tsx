@@ -185,17 +185,21 @@ export default function PresentesGrid() {
     >
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-3xl md:text-4xl font-serif font-bold text-[#f3e6d0] mb-4">
+          <h1 className="text-4xl md:text-5xl font-Romantc text-highlight3 mb-4">
             Lista de Presentes
           </h1>
-          <div className="w-20 h-1 bg-[#d4af37] mx-auto mb-6"></div>
-          <p className="text-[#f5e6d0] text-lg max-w-2xl mx-auto leading-relaxed">
-            Escolha com carinho o presente que gostaria de nos oferecer.
-            Cada presente pode ser selecionado apenas uma vez.
-          </p>
         </div>
 
-        <div className="bg-white/80 border border-[#e8d9c5] rounded-xl p-6 mb-10 text-center max-w-3xl mx-auto">
+        <div className="rounded-xl p-6 mb-10 text-center max-w-3xl mx-auto"
+         style={{
+                backgroundColor: "#4d6648ff",
+                backgroundImage: "url('https://www.transparenttextures.com/patterns/xv.png')",
+                backgroundSize: "cover",
+                border: "2px solid #DE9B72",
+                opacity: presenteSelecionado !== null ? 0.5 : 1,
+                cursor: presenteSelecionado !== null ? "not-allowed" : "pointer",
+              }}
+            >
           <div className="flex items-center justify-center gap-3 mb-3">
             <svg className="w-6 h-6 text-[#d4af37]" fill="currentColor" viewBox="0 0 20 20">
               <path
@@ -204,12 +208,14 @@ export default function PresentesGrid() {
                 clipRule="evenodd"
               />
             </svg>
-            <h3 className="text-xl font-serif font-semibold text-[#5b3a29]">
+            <h3 className="text-2xl font-texts font-semibold text-background">
               Informação Importante
             </h3>
           </div>
-          <p className="text-[#8b7355]">
-            Os noivos não saberão qual presente você escolheu.
+          <p className="text-background">
+            Os noivos não saberão qual presente você escolheu. 
+            Escolha com carinho o presente que gostaria de nos oferecer.
+            Cada presente pode ser selecionado apenas uma vez.
           </p>
         </div>
 
