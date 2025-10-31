@@ -41,9 +41,7 @@ export default function ConfirmModal({
   onClose: () => void;
 }) {
   const [token, setToken] = useState("");
-  const [nome, setNome] = useState("");
   const [naoIrei, setNaoIrei] = useState(false);
-  const [familiaSelecionada, setFamiliaSelecionada] = useState("");
   const [membrosConfirmados, setMembrosConfirmados] = useState<number[]>([]);
   const [familiaCarregada, setFamiliaCarregada] = useState<any>(null);
     const navigate = useNavigate(); 

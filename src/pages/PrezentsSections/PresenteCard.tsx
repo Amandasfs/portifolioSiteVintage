@@ -12,10 +12,8 @@ interface Props {
 
 export default function PresenteCard({
   presente,
-  disabled = false,
   onReservar,
   onReservarPix,
-  onCopiarPix,
   isUserReservouAlgumPresente = false,
 }: Props) {
   const [reservado, setReservado] = useState(false);
