@@ -15,7 +15,6 @@ function PresenteCard({
   disabled,
   onReservar,
   onReservarPix,
-  onCopiarPix,
 }: PresenteCardProps) {
   const { nome, valor, imagem, reservado } = presente;
 
