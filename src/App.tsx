@@ -1,12 +1,17 @@
-import './index.css'
-import InvitePage from './pages/InvitePage'
-function App() {
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import InvitePage from "./pages/InvitePage";
+import PrezentPage from "./pages/PrezentPage";
+import "./index.css";
 
+function App() {
   return (
-    <>
-      <InvitePage />
-    </>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<InvitePage />} />
+        <Route path="/prezents" element={<PrezentPage />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;

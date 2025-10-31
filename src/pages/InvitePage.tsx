@@ -1,6 +1,6 @@
 import { useState } from "react";
-import HeaderSection from "./sections/HeaderSection";
-import DetailsSection from "./sections/DetailsSection";
+import HeaderSection from "./InviteSections/HeaderSection";
+import DetailsSection from "./InviteSections/DetailsSection";
 import ConfirmModal from "../component/ConfirmModal";
 import Footer from "../component/Footer";
 
