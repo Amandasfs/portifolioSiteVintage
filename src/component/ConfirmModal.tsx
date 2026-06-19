@@ -1,7 +1,21 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import cornerImage from "../assets/img/cornerImage.png";
-import { supabase } from "../lib/supabase";
+import { supabase } from "../config/supabase"; // Verifique se esse caminho está correto na sua nova estrutura
+
+// --- 1. Tipagens do Supabase ---
+interface Guest {
+  id: string;
+  name: string;
+  status: 'pending' | 'confirmed' | 'declined';
+}
+
+interface GuestGroup {
+  id: string;
+  name: string;
+  token: string;
+  guests: Guest[];
+}
 
 export default function ConfirmModal({
   isOpen,
@@ -15,78 +29,95 @@ export default function ConfirmModal({
   const [errorMsg, setErrorMsg] = useState("");
   const [naoIrei, setNaoIrei] = useState(false);
   const [membrosConfirmados, setMembrosConfirmados] = useState<string[]>([]);
-  const [familiaCarregada, setFamiliaCarregada] = useState<any>(null);
+  const [familiaCarregada, setFamiliaCarregada] = useState<GuestGroup | null>(null);
+  
   const navigate = useNavigate();
 
+  // --- 2. Busca no Supabase ---
   const carregarFamilia = async () => {
     if (!token.trim()) return;
     setLoading(true);
     setErrorMsg("");
 
     try {
-      // Busca direta no banco via Cliente Supabase
+      // Usando os novos nomes das tabelas que criamos no Supabase
       const { data: familia, error } = await supabase
-        .from('familias')
-        .select('*, convidados(*)')
+        .from('guest_groups')
+        .select('*, guests(*)')
         .ilike('token', token.trim())
         .maybeSingle();
 
       if (error) throw error;
 
       if (!familia) {
-        setErrorMsg("Código não encontrado. Verifique seu convite!");
+        setErrorMsg("Código não encontrado. Verifique seu convite impresso!");
         return;
       }
 
-      // Lógica de Admin
-      if (familia.is_admin) {
-        // Salva no localStorage para as outras páginas saberem que é admin
-        localStorage.setItem('casamento_role', 'admin');
-        navigate("/admin"); 
-        return;
-      }
-
-      // Lógica de Convidado
-      setFamiliaCarregada(familia);
-      localStorage.setItem('familia_id', familia.id);
+      setFamiliaCarregada(familia as GuestGroup);
+      
+      // Armazena no LocalStorage para que a página de presentes (se usar) saiba quem está logado
+      localStorage.setItem('guest_group_id', familia.id);
       localStorage.setItem('casamento_role', 'guest');
 
-      const jaConfirmados = familia.convidados
-        .filter((c: any) => c.confirmado)
-        .map((c: any) => c.id);
+      // Mapeia quem já estava confirmado no banco para deixar o checkbox pré-marcado
+      const jaConfirmados = (familia.guests as Guest[])
+        .filter((c) => c.status === 'confirmed')
+        .map((c) => c.id);
+        
       setMembrosConfirmados(jaConfirmados);
 
-    } catch (err: any) {
-      setErrorMsg("Erro ao conectar com o banco de dados.");
+    } catch (err) {
+      console.error("Erro no Supabase:", err);
+      setErrorMsg("Erro de conexão. Tente novamente em alguns segundos.");
     } finally {
       setLoading(false);
     }
   };
 
+  // --- 3. Salvando Confirmação no Supabase ---
   const handleConfirmar = async () => {
+    if (!familiaCarregada) return;
     setLoading(true);
+    
     try {
-      const updates = familiaCarregada.convidados.map((membro: any) => {
-        // Se "naoIrei" estiver marcado, todos ficam como false.
-        // Caso contrário, segue a seleção da lista.
-        const isSelected = naoIrei ? false : membrosConfirmados.includes(membro.id);
+      // Cria um array de promessas para atualizar todos os convidados do grupo
+      const updates = familiaCarregada.guests.map((membro) => {
+        // Lógica do Status: Se marcou "Não irei", todos ficam declined. Senão, vê quem foi selecionado.
+        const novoStatus = naoIrei 
+          ? 'declined' 
+          : (membrosConfirmados.includes(membro.id) ? 'confirmed' : 'declined');
+
         return supabase
-          .from("convidados")
-          .update({ confirmado: isSelected })
+          .from("guests")
+          .update({ 
+            status: novoStatus,
+            updated_at: new Date().toISOString()
+          })
           .eq("id", membro.id);
       });
 
-      await Promise.all(updates);
+      // Dispara todas as atualizações simultaneamente
+      const results = await Promise.all(updates);
+      
+      // Verifica se alguma atualização falhou
+      const hasError = results.some(res => res.error);
+      if (hasError) throw new Error("Erro parcial na atualização");
+
+      // Sucesso! Redireciona para a página de presentes
       navigate("/prezents");
+      
     } catch (err) {
-      alert("Erro ao salvar sua confirmação. Tente novamente.");
+      console.error("Erro ao salvar:", err);
+      alert("Tivemos um problema ao salvar sua confirmação. Por favor, tente novamente.");
     } finally {
       setLoading(false);
     }
   };
 
   const toggleMembroConfirmado = (membroId: string) => {
-    if (naoIrei) return; // Bloqueia seleção se marcou que não vai
+    if (naoIrei) return; // Se a pessoa marcou que não vai, bloqueia a seleção individual
+    
     setMembrosConfirmados((prev) =>
       prev.includes(membroId)
         ? prev.filter((id) => id !== membroId)
@@ -113,7 +144,6 @@ export default function ConfirmModal({
             Confirmar Presença
           </h3>
 
-          {/* Campo de Token sempre visível no início */}
           {!familiaCarregada && (
             <>
               <div className="relative mb-4">
@@ -121,8 +151,8 @@ export default function ConfirmModal({
                   type="text"
                   placeholder="Digite o código do seu convite"
                   value={token}
-                  onChange={(e) => setToken(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-[#DE9B72] bg-[#3A5544]/80 text-[#F8EDEB] placeholder-[#DE9B72]/70 focus:outline-none focus:ring-2 focus:ring-[#DE9B72]"
+                  onChange={(e) => setToken(e.target.value.toUpperCase())} // Força maiúsculo no token
+                  className="w-full px-4 py-3 rounded-xl border-2 border-[#DE9B72] bg-[#3A5544]/80 text-[#F8EDEB] placeholder-[#DE9B72]/70 focus:outline-none focus:ring-2 focus:ring-[#DE9B72] text-center tracking-widest font-bold"
                 />
               </div>
               <button
@@ -135,24 +165,23 @@ export default function ConfirmModal({
             </>
           )}
 
-          {errorMsg && <p className="text-red-300 text-sm mb-4 bg-black/20 p-2 rounded">{errorMsg}</p>}
+          {errorMsg && <p className="text-red-300 text-sm mb-4 bg-black/40 p-2 rounded border border-red-500/30">{errorMsg}</p>}
 
-          {/* Seção que só aparece após buscar a família */}
           {familiaCarregada && (
             <div className="animate-in fade-in zoom-in duration-300">
               <div className="mb-6 p-4 rounded-xl border-2 border-[#DE9B72]/40 bg-[#3A5544]/60">
                 <h4 className="text-xl font-romantic text-[#F8EDEB] mb-4">
-                  Família {familiaCarregada.nome}
+                  Grupo: {familiaCarregada.name}
                 </h4>
 
                 <div className={`space-y-2 max-h-40 overflow-y-auto pr-2 ${naoIrei ? 'opacity-40 pointer-events-none' : ''}`}>
-                  {familiaCarregada.convidados.map((membro: any) => (
+                  {familiaCarregada.guests.map((membro) => (
                     <div
                       key={membro.id}
                       onClick={() => toggleMembroConfirmado(membro.id)}
                       className="flex items-center justify-between p-3 rounded-lg border border-[#DE9B72]/30 bg-[#3A5544]/40 cursor-pointer hover:bg-[#3A5544]/80 transition-colors"
                     >
-                      <span className="text-[#F8EDEB] font-medium">{membro.nome}</span>
+                      <span className="text-[#F8EDEB] font-medium">{membro.name}</span>
                       <div className={`w-6 h-6 rounded flex items-center justify-center border-2 transition-all ${membrosConfirmados.includes(membro.id) ? 'bg-[#DE9B72] border-[#DE9B72]' : 'border-[#DE9B72]/60'}`}>
                         {membrosConfirmados.includes(membro.id) && <span className="text-[#3A5544] font-bold text-sm">✓</span>}
                       </div>
@@ -161,7 +190,6 @@ export default function ConfirmModal({
                 </div>
               </div>
 
-              {/* Checkbox "Não irei" agora condicional */}
               <div className="flex items-center mb-6 justify-center gap-3 bg-black/10 p-3 rounded-lg">
                 <input
                   type="checkbox"
@@ -169,7 +197,7 @@ export default function ConfirmModal({
                   checked={naoIrei}
                   onChange={(e) => {
                     setNaoIrei(e.target.checked);
-                    if (e.target.checked) setMembrosConfirmados([]); // Limpa se marcar que não vai
+                    if (e.target.checked) setMembrosConfirmados([]); // Limpa as seleções se ele disser que não vai
                   }}
                   className="w-5 h-5 accent-[#DE9B72] cursor-pointer"
                 />
@@ -196,7 +224,6 @@ export default function ConfirmModal({
             </div>
           )}
 
-          {/* Botão Cancelar/Fechar */}
           {!familiaCarregada && (
              <button onClick={onClose} className="text-[#F8EDEB]/60 hover:text-[#F8EDEB] transition-colors mt-2">
                 Voltar ao site
