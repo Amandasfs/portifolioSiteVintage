@@ -103,7 +103,8 @@ export default function PresentesGrid() {
   const [chavePixCasal, setChavePixCasal] = useState("");
 
   // --- ESTADOS DO MODAL DE MENSAGEM ---
-  const [reservaPendente, setReservaPendente] = useState<{ id: string, tipo: 'compra' | 'pix', valor: number, nome: string } | null>(null);
+  // Adicionado o tipo 'skip' para quando o usuário apenas confirmar presença
+  const [reservaPendente, setReservaPendente] = useState<{ id: string, tipo: 'compra' | 'pix' | 'skip', valor: number, nome: string } | null>(null);
   const [mensagemConvidado, setMensagemConvidado] = useState("");
   const [salvando, setSalvando] = useState(false);
 
@@ -141,44 +142,58 @@ export default function PresentesGrid() {
     setMensagemConvidado("");
   };
 
-  // Confirma a reserva e envia pro Supabase
+  // Abre o modal de mensagem para Não Presentear
+  const iniciarNaoPresentear = () => {
+    if (presenteSelecionado !== null) return;
+    setReservaPendente({ id: 'skip', tipo: 'skip', valor: 0, nome: 'Apenas Confirmar Presença' });
+    setMensagemConvidado("");
+  };
+
+  // Confirma a reserva (ou presença) e envia pro Supabase
   const confirmarReservaComMensagem = async () => {
     if (!reservaPendente) return;
     setSalvando(true);
 
     try {
-      // Salva no banco de dados com a mensagem
-      await supabase.from('vw_gifts').update({ 
-        is_reserved: true, 
-        reservation_type: reservaPendente.tipo,
-        guest_message: mensagemConvidado.trim() || null // Salva a mensagem se houver
-      }).eq('id', reservaPendente.id);
+      if (reservaPendente.tipo === 'skip') {
+        // Se for "skip", tentamos salvar a mensagem no Grupo do convidado logado
+        const groupId = localStorage.getItem('guest_group_id');
+        if (groupId && mensagemConvidado.trim()) {
+          await supabase.from('vw_guest_groups').update({ 
+            guest_message: mensagemConvidado.trim() 
+          }).eq('id', groupId);
+        }
 
-      // Atualiza a tela
-      setPresenteSelecionado(reservaPendente.id);
-      setPresentes(prev => prev.map(p => p.id === reservaPendente.id ? { ...p, is_reserved: true } : p));
-      
-      // Lógica do PIX (se for o caso)
-      if (reservaPendente.tipo === 'pix') {
-        const pix = chavePixCasal || "casal@casamento.com";
-        navigator.clipboard.writeText(pix);
-        alert(`Chave PIX: ${pix}\nValor: R$ ${reservaPendente.valor}\n\nA chave PIX foi copiada para sua área de transferência!`);
+        setPresenteSelecionado("skip");
+        setMensagemSucesso("Presença confirmada com sucesso!");
+
+      } else {
+        // Se for compra ou PIX, salva a mensagem direto no presente
+        await supabase.from('vw_gifts').update({ 
+          is_reserved: true, 
+          reservation_type: reservaPendente.tipo,
+          guest_message: mensagemConvidado.trim() || null 
+        }).eq('id', reservaPendente.id);
+
+        setPresenteSelecionado(reservaPendente.id);
+        setPresentes(prev => prev.map(p => p.id === reservaPendente.id ? { ...p, is_reserved: true } : p));
+        
+        if (reservaPendente.tipo === 'pix') {
+          const pix = chavePixCasal || "casal@casamento.com";
+          navigator.clipboard.writeText(pix);
+          alert(`Chave PIX: ${pix}\nValor: R$ ${reservaPendente.valor}\n\nA chave PIX foi copiada para sua área de transferência!`);
+        }
+
+        setMensagemSucesso("Presente reservado com sucesso!");
       }
 
-      setMensagemSucesso("Presente reservado com sucesso!");
     } catch (error) {
       console.error(error);
-      alert("Houve um erro ao reservar. Tente novamente.");
+      alert("Houve um erro ao completar a ação. Tente novamente.");
     } finally {
       setSalvando(false);
       setReservaPendente(null); // Fecha o modal de mensagem
     }
-  };
-
-  const handleNaoPresentear = () => {
-    if (presenteSelecionado !== null) return;
-    setPresenteSelecionado("skip");
-    setMensagemSucesso("Presença confirmada com sucesso!");
   };
 
   return (
@@ -244,7 +259,7 @@ export default function PresentesGrid() {
         <div className="text-center">
           <div className="w-full flex justify-center mt-6">
             <button
-              onClick={handleNaoPresentear}
+              onClick={iniciarNaoPresentear}
               disabled={presenteSelecionado !== null}
               className="px-8 py-4 font-semibold rounded-lg shadow-lg text-white text-base transition-all transform hover:scale-105"
               style={{
@@ -284,8 +299,13 @@ export default function PresentesGrid() {
             <h3 className="text-2xl font-serif font-semibold text-[#5b3a29] mb-2 text-center">
               Deixe sua mensagem
             </h3>
+            
+            {/* Texto dinâmico dependendo da escolha */}
             <p className="text-center text-[#8b7355] mb-6 text-sm">
-              Você está reservando: <strong>{reservaPendente.nome}</strong>
+              {reservaPendente.tipo === 'skip' 
+                ? "Ficamos muito felizes em confirmar a sua presença!" 
+                : <span>Você está reservando: <strong>{reservaPendente.nome}</strong></span>
+              }
             </p>
 
             <textarea
@@ -308,7 +328,7 @@ export default function PresentesGrid() {
                 disabled={salvando}
                 className="px-5 py-2 bg-[#5b3a29] text-white font-medium rounded-lg hover:bg-[#3f2a1f] transition-colors shadow-md disabled:opacity-50"
               >
-                {salvando ? "Reservando..." : "Confirmar Reserva"}
+                {salvando ? "Aguarde..." : "Confirmar e Enviar"}
               </button>
             </div>
           </div>
