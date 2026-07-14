@@ -3,49 +3,58 @@ import MensagemSucessoModal from "../../component/MensagemSucessoModal"; // Ajus
 import { supabase } from "../../config/supabase";
 
 import type { GiftItem as Presente } from "../../types/Guest";
+import { QRCodeSVG } from "qrcode.react";
 
 // =========================================================
-// FUNÇÃO MATEMÁTICA PARA GERAR O "PIX COPIA E COLA" OFICIAL
+// PIX SEM VALOR FIXO
 // =========================================================
-const gerarPayloadPix = (chave: string, valor: number) => {
+const gerarPayloadPixLivre = (chave: string) => {
   const chaveLimpa = chave.trim();
+
   if (!chaveLimpa) return "";
-  
-  const val = valor.toFixed(2);
+
   const nome = "Casamento".substring(0, 25);
   const cidade = "Brasil".substring(0, 15);
 
-  const padLength = (str: string) => String(str.length).padStart(2, '0');
+  const padLength = (str: string) =>
+    String(str.length).padStart(2, "0");
 
-  const idChavePix = `0014br.gov.bcb.pix01${padLength(chaveLimpa)}${chaveLimpa}`;
+  const idChavePix =
+    `0014br.gov.bcb.pix01${padLength(chaveLimpa)}${chaveLimpa}`;
+
   const payloadBase = [
     "000201",
     `26${padLength(idChavePix)}${idChavePix}`,
     "52040000",
     "5303986",
-    `54${padLength(val)}${val}`,
     "5802BR",
     `59${padLength(nome)}${nome}`,
     `60${padLength(cidade)}${cidade}`,
-    "62070503***", 
-    "6304"
-  ].join('');
+    "62070503***",
+    "6304",
+  ].join("");
 
   let crc = 0xffff;
+
   for (let i = 0; i < payloadBase.length; i++) {
     crc ^= payloadBase.charCodeAt(i) << 8;
+
     for (let j = 0; j < 8; j++) {
-      if ((crc & 0x8000) > 0) {
+      if (crc & 0x8000) {
         crc = (crc << 1) ^ 0x1021;
       } else {
-        crc = crc << 1;
+        crc <<= 1;
       }
     }
   }
-  const crcHex = (crc & 0xffff).toString(16).toUpperCase().padStart(4, '0');
+
+  const crcHex = (crc & 0xffff)
+    .toString(16)
+    .toUpperCase()
+    .padStart(4, "0");
+
   return payloadBase + crcHex;
 };
-
 
 interface PresenteCardProps {
   presente: Presente;
@@ -122,7 +131,7 @@ function PresenteCard({
               : "border-[#8b7355] text-[#8b7355] hover:bg-[#8b7355] hover:text-white"
           }`}
         >
-          Contribuir com PIX
+          Enviar Presente em Dinheiro
         </button>
       </div>
     </div>
@@ -141,7 +150,12 @@ export default function PresentesGrid() {
   const [nomeConvidado, setNomeConvidado] = useState(""); 
   const [salvando, setSalvando] = useState(false);
   
-  const [mostrarPixModal, setMostrarPixModal] = useState<{ chave: string, valor: number, nomePresente: string, payload: string } | null>(null);
+  const [mostrarPixModal, setMostrarPixModal] =
+    useState<{
+      chave: string;
+      nomePresente: string;
+      payload: string;
+    } | null>(null);
 
   useEffect(() => {
     const carregarDados = async () => {
@@ -213,13 +227,13 @@ export default function PresentesGrid() {
         }
         
         const pix = chavePixCasal || "Não configurada";
-        const codigoCopiaECola = gerarPayloadPix(pix, reservaPendente.valor);
+        const codigoCopiaECola =
+          gerarPayloadPixLivre(pix);
 
         setMostrarPixModal({
           chave: pix,
-          valor: reservaPendente.valor,
           nomePresente: reservaPendente.nome,
-          payload: codigoCopiaECola
+          payload: codigoCopiaECola,
         });
         
         setReservaPendente(null);
@@ -228,7 +242,7 @@ export default function PresentesGrid() {
         await supabase.from('vw_gifts').update({ 
           is_reserved: true, 
           reservation_type: 'compra',
-          guest_message: mensajeFinal || null 
+          guest_message: mensagemFinal || null
         }).eq('id', reservaPendente.id);
 
         setPresenteSelecionado(reservaPendente.id);
@@ -403,12 +417,15 @@ export default function PresentesGrid() {
               Para o presente: <strong>{mostrarPixModal.nomePresente}</strong>
             </p>
 
-            <div className="w-48 h-48 bg-white p-2 rounded-lg shadow-inner border-2 border-[#e8d9c5] mb-2">
-              <img 
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(mostrarPixModal.payload)}`}
-                alt="QR Code PIX Válido" 
-                className="w-full h-full object-contain"
-              />
+            <div className="bg-gradient-to-br from-[#f5e6c8] to-[#d4af37] p-4 rounded-[36px] shadow-xl mb-4">
+              <div className="bg-white p-4 rounded-[28px]">
+                <QRCodeSVG
+                  value={mostrarPixModal.payload}
+                  size={220}
+                  level="H"
+                  marginSize={2}
+                />
+              </div>
             </div>
 
             {/* Nova linha: Exibe a chave PIX original textual logo abaixo do QR Code */}
@@ -416,8 +433,8 @@ export default function PresentesGrid() {
               Chave PIX: <span className="font-bold text-[#5b3a29] select-all">{mostrarPixModal.chave}</span>
             </p>
 
-            <p className="text-[#5b3a29] text-2xl font-bold font-serif mb-6">
-              R$ {mostrarPixModal.valor.toFixed(2).replace('.', ',')}
+            <p className="text-[#5b3a29] text-center text-sm mb-6">
+              Escolha livremente o valor da sua contribuição
             </p>
 
             <div className="w-full bg-[#f8f9fa] border border-[#d4af37]/50 rounded-lg p-3 mb-6 text-center overflow-hidden">

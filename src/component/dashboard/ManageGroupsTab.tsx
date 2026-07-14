@@ -53,6 +53,7 @@ export default function ManageGroupsTab({ groups, onRefresh }: { groups: GuestGr
       onRefresh();
       setView('list');
     } catch (err) {
+      console.error("Erro ao salvar grupo:", err);
       alert("Erro ao salvar grupo.");
     } finally {
       setSaving(false);
