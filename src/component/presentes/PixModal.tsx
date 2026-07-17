@@ -122,7 +122,7 @@ export default function PixModal({
                 <div className="h-px w-16 bg-[#DE9B72]" />
 
                 <span className="text-[#DE9B72]">
-                  ❦
+                  𓆩♡𓆪
                 </span>
 
                 <div className="h-px w-16 bg-[#DE9B72]" />

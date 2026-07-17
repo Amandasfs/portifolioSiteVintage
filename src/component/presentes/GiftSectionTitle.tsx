@@ -3,7 +3,7 @@ export default function GiftSectionTitle() {
     <div className="text-center mb-12">
       <div className="flex items-center justify-center gap-4 mb-4">
         <div className="h-px w-20 bg-[#DE9B72]/50" />
-        <span className="text-[#DE9B72] text-xl">❦</span>
+        <span className="text-[#DE9B72] text-xl">𓆩♡𓆪</span>
         <div className="h-px w-20 bg-[#DE9B72]/50" />
       </div>
 

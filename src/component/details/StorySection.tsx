@@ -33,7 +33,7 @@ export default function StorySection() {
             text-[#4d6648ff]
           "
         >
-          ❦
+          𓆩♡𓆪
         </span>
 
         <div className="h-px w-16 sm:w-24 bg-[#4d6648ff]/40" />
@@ -132,7 +132,7 @@ export default function StorySection() {
                 opacity-70
               "
             >
-              ❦
+              𓆩♡𓆪
             </span>
           </div>
 
@@ -252,7 +252,7 @@ export default function StorySection() {
             text-[#4d6648ff]
           "
         >
-          ❦
+          𓆩♡𓆪
         </span>
 
         <div className="h-px w-16 sm:w-24 bg-[#4d6648ff]/40" />

@@ -43,8 +43,7 @@ export default function GiftInfoCard({
           leading-8
         "
       >
-        Sua presença já é o maior presente.
-        Mas se desejar nos presentear,
+        Se desejar nos presentear,
         escreva uma mensagem para guardarmos
         com carinho e lembrarmos deste dia
         para sempre.

@@ -19,306 +19,103 @@ export default function PresenteCard({
     <article
       className={`
         relative
-        overflow-hidden
-        rounded-[28px]
-
+        rounded-xl
+        border
+        border-black/10
+        p-6
         transition-all
         duration-500
 
-        hover:-translate-y-2
-        hover:shadow-[0_20px_40px_rgba(0,0,0,0.25)]
-
-        ${
-          disabled
-            ? "opacity-40 cursor-not-allowed"
-            : ""
-        }
+        ${disabled ? "opacity-40 cursor-not-allowed" : "hover:border-black/20"}
       `}
-      style={{
-        backgroundColor: "#f5deb3",
-        backgroundImage:
-          "url('https://www.transparenttextures.com/patterns/paper-fibers.png')",
-        border: "2px solid #DE9B72",
-      }}
     >
-      {/* Envelhecimento */}
+      {/* FOTO */}
+      <div className="relative overflow-hidden rounded-lg border border-black/10 mb-5">
+        <img
+          src={presente.image_url || "https://via.placeholder.com/600x600"}
+          alt={presente.title}
+          className={`
+            w-full h-64 object-cover transition-all duration-700
+            ${reservado ? "grayscale brightness-90" : ""}
+          `}
+        />
 
-      <div
-        className="
-          absolute
-          inset-0
-          pointer-events-none
-          opacity-40
-        "
-        style={{
-          background: `
-            radial-gradient(
-              circle at top left,
-              rgba(75,34,4,.10),
-              transparent 30%
-            ),
+        {reservado && (
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-12 px-5 py-2 border-2 border-dashed border-red-800 text-red-800 font-bold uppercase tracking-widest bg-white/80">
+            Reservado
+          </div>
+        )}
+      </div>
 
-            radial-gradient(
-              circle at bottom right,
-              rgba(75,34,4,.10),
-              transparent 40%
-            )
-          `,
-        }}
-      />
+      {/* TÍTULO (Peso normal, sem bold) */}
+      <h3 className="text-center text-2xl md:text-3xl text-black font-normal tracking-wide leading-snug">
+        {presente.title}
+      </h3>
 
-      {/* Moldura interna */}
+      {/* VALOR */}
+      <div className="mt-2 text-center text-lg text-black/70 font-normal">
+        R$ {presente.suggested_value}
+      </div>
 
-      <div
-        className="
-          absolute
-          inset-3
-          rounded-[20px]
-          pointer-events-none
-        "
-        style={{
-          border:
-            "1px solid rgba(222,155,114,.25)",
-        }}
-      />
+      {/* SUBTÍTULO */}
+      <div className="mt-1 text-center text-[10px] uppercase tracking-[0.3em] text-black/40">
+        Lista de Casamento
+      </div>
 
-      <div className="relative z-10 p-5">
-        {/* FOTO */}
+      {/* DIVISOR */}
+      <div className="mt-5 flex items-center justify-center gap-4 text-black/20">
+        <div className="h-px w-10 bg-current" />
+        <span className="text-xs tracking-widest select-none">𓆩♡𓆪</span>
+        <div className="h-px w-10 bg-current" />
+      </div>
 
-        <div
-          className="
-            relative
-            overflow-hidden
-            rounded-2xl
-            mb-5
-          "
-        >
-          <img
-            src={
-              presente.image_url ||
-              "https://via.placeholder.com/600x600"
+      {/* BOTÕES */}
+      <div className="mt-6 flex flex-col gap-3 text-xs uppercase tracking-[0.2em] font-medium">
+        {/* RESERVAR */}
+        <button
+          onClick={onReservar}
+          disabled={reservado || disabled}
+          className={`
+            py-3.5 rounded-lg border transition-all duration-300
+            ${reservado || disabled
+              ? "border-black/5 text-black/20 cursor-not-allowed"
+              : "border-black text-black hover:bg-black hover:text-white"
             }
-            alt={presente.title}
-            className="
-              w-full
-              h-64
-              object-cover
-
-              transition-transform
-              duration-700
-
-              hover:scale-110
-            "
-          />
-
-          {/* Tag reservado */}
-
-          {reservado && (
-            <div
-              className="
-                absolute
-                top-3
-                right-3
-
-                px-3
-                py-1
-
-                rounded-full
-
-                text-xs
-                uppercase
-                tracking-widest
-
-                bg-highlight3
-                text-white
-              "
-            >
-              Reservado
-            </div>
-          )}
-        </div>
-
-        {/* TÍTULO */}
-
-        <h3
-          className="
-            font-romantic
-            text-4xl
-            text-center
-            text-highlight3
-            leading-tight
-          "
+          `}
         >
-          {presente.title}
-        </h3>
+          {reservado ? "Presente Reservado" : "Reservar Presente"}
+        </button>
 
-        {/* VALOR */}
-
-        <div className="mt-3 text-center">
-          <span
-            className="
-              text-highlight
-              text-xl
-              font-semibold
-            "
-          >
-            R$ {presente.suggested_value}
-          </span>
-        </div>
-
-        {/* DESCRIÇÃO */}
-
-        <div
-          className="
-            mt-5
-            flex
-            justify-center
-          "
-        >
-          <div
-            className="
-              h-px
-              w-20
-              bg-[#DE9B72]
-            "
-          />
-        </div>
-
-        {/* BOTÕES */}
-
-        <div
-          className="
-            mt-6
-            flex
-            flex-col
-            gap-3
-          "
-        >
-          <button
-            onClick={onReservar}
-            disabled={
-              reservado || disabled
+        {/* LOJA */}
+        <a
+          href={presente.link || "#"}
+          target="_blank"
+          rel="noreferrer"
+          className={`
+            py-3.5 rounded-lg text-center border transition-all duration-300
+            ${reservado || disabled
+              ? "border-black/5 text-black/20 cursor-not-allowed"
+              : "border-black/20 text-black/60 hover:border-black hover:text-black"
             }
-            className={`
-              py-3
-              rounded-xl
+          `}
+        >
+          Ver na Loja
+        </a>
 
-              transition-all
-
-              border-2
-
-              ${
-                reservado || disabled
-                  ? `
-                    bg-gray-200
-                    border-gray-300
-                    text-gray-500
-                  `
-                  : `
-                    bg-details
-                    border-[#DE9B72]
-                    text-background
-
-                    hover:brightness-110
-                  `
-              }
-            `}
-          >
-            {reservado
-              ? "Presente Reservado"
-              : "Reservar Presente"}
-          </button>
-
-          <a
-            href={
-              presente.link || "#"
+        {/* PIX */}
+        <button
+          onClick={onReservarPix}
+          disabled={disabled}
+          className={`
+            py-3.5 rounded-lg border transition-all duration-300
+            ${disabled
+              ? "border-black/5 text-black/20 cursor-not-allowed"
+              : "border-black/20 text-black/60 hover:border-black hover:text-black"
             }
-            target="_blank"
-            rel="noreferrer"
-            onClick={(e) => {
-              if (
-                !presente.link ||
-                reservado ||
-                disabled
-              ) {
-                e.preventDefault();
-              }
-            }}
-            className={`
-              py-3
-              rounded-xl
-
-              text-center
-
-              border-2
-
-              transition-all
-
-              ${
-                reservado || disabled
-                  ? `
-                    border-gray-300
-                    text-gray-400
-                    cursor-not-allowed
-                  `
-                  : `
-                    border-highlight3
-                    text-highlight3
-
-                    hover:bg-highlight3
-                    hover:text-white
-                  `
-              }
-            `}
-          >
-            Ver na Loja
-          </a>
-
-          <button
-            onClick={onReservarPix}
-            disabled={disabled}
-            className={`
-              py-3
-              rounded-xl
-
-              border-2
-              border-[#DE9B72]
-
-              transition-all
-
-              ${
-                disabled
-                  ? `
-                    opacity-40
-                    cursor-not-allowed
-                  `
-                  : `
-                    text-highlight3
-
-                    hover:bg-[#DE9B72]
-                    hover:text-highlight3
-                  `
-              }
-            `}
-          >
-            Presentear via PIX
-          </button>
-        </div>
-
-        {/* Rodapé */}
-
-        <div className="mt-6 text-center">
-          <span
-            className="
-              text-xs
-              uppercase
-              tracking-[0.25em]
-              text-highlight/70
-            "
-          >
-            Com Amor
-          </span>
-        </div>
+          `}
+        >
+          Presentear via PIX
+        </button>
       </div>
     </article>
   );
