@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Plus, Edit2, Trash2, Save } from "lucide-react";
 import { supabase } from "../../config/supabase";
-import type { GuestGroup } from "../../types/Guest";
+import type { GuestGroup } from "../../types/guest";
 
 export default function ManageGroupsTab({ groups, onRefresh }: { groups: GuestGroup[], onRefresh: () => void }) {
   const [view, setView] = useState<'list' | 'form'>('list');

@@ -1,7 +1,19 @@
+// src/types/Guest.ts
+
+export type GuestStatus =
+  | "pending"
+  | "confirmed"
+  | "declined";
+
+export type ReservationType =
+  | "compra"
+  | "pix"
+  | null;
+
 export interface Guest {
   id: string;
   name: string;
-  status: 'pending' | 'confirmed' | 'declined';
+  status: GuestStatus;
   groupName?: string;
 }
 
@@ -12,15 +24,30 @@ export interface GuestGroup {
   guests: Guest[];
 }
 
-// === TIPO DE PRESENTE UNIFICADO E ATUALIZADO ===
 export interface GiftItem {
   id: string;
-  title: string;             // Antigo "nome"
-  suggested_value: number;   // Antigo "valor"
-  link?: string;             // Link da loja
-  image_url?: string;        // Antiga "imagem"
-  is_reserved: boolean;      // Antigo "reservado"
-  reservation_type: 'compra' | 'pix' | null; // Antigo "tipoReserva"
+
+  // Nome do presente
+  title: string;
+
+  // Valor sugerido pelos noivos
+  suggested_value: number;
+
+  // Link externo para compra
+  link?: string;
+
+  // URL da imagem do presente
+  image_url?: string;
+
+  // Indica se foi reservado
+  is_reserved: boolean;
+
+  // Forma de reserva
+  reservation_type: ReservationType;
 }
 
-export type TabType = 'geral' | 'familias' | 'presentes' | 'config';
+export type TabType =
+  | "geral"
+  | "familias"
+  | "presentes"
+  | "config";

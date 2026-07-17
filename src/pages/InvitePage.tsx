@@ -1,8 +1,8 @@
 import { useState } from "react";
 import HeaderSection from "./InviteSections/HeaderSection";
 import DetailsSection from "./InviteSections/DetailsSection";
-import ConfirmModal from "../component/ConfirmModal";
-import Footer from "../component/Footer";
+import ConfirmModal from "../component/modal/ConfirmModal";
+import Footer from "../component/modal/Footer";
 
 export default function InvitePage() {
   const [isModalOpen, setModalOpen] = useState(false);

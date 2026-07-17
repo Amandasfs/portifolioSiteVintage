@@ -1,4 +1,4 @@
-import cornerImage from "../assets/img/cornerImage.png";
+import cornerImage from "../../assets/img/cornerImage.png";
 
 export default function Footer() {
   return (

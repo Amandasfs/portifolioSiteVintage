@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import MensagemSucessoModal from "../../component/MensagemSucessoModal"; // Ajuste o caminho se necessário
+import MensagemSucessoModal from "../../component/modal/MensagemSucessoModal"; // Ajuste o caminho se necessário
 import { supabase } from "../../config/supabase";
 
-import type { GiftItem as Presente } from "../../types/Guest";
+import type { GiftItem as Presente } from "../../types/guest";
 import { QRCodeSVG } from "qrcode.react";
 
 // =========================================================

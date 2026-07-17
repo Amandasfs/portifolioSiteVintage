@@ -1,5 +1,5 @@
 import { useState } from "react";
-import selo from "../assets/img/carimbo.svg";
+import selo from "../../assets/img/carimbo.svg";
 
 interface Props {
   mensagemPrincipal?: string;

@@ -4,7 +4,7 @@ import { Users, Gift, TrendingUp, LogOut, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 // Importação das Tipagens Compartilhadas e Abas Separadas
-import type { Guest, GuestGroup, GiftItem, TabType } from "../types/Guest";
+import type { Guest, GuestGroup, GiftItem, TabType } from "../types/guest";
 import GuestListTab from "../component/dashboard/GuestListTab";
 import ManageGroupsTab from "../component/dashboard/ManageGroupsTab";
 import ManageGiftsTab from "../component/dashboard/ManageGiftsTab";

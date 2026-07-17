@@ -1,6 +1,6 @@
 // src/components/VintageBorder.tsx
 import React from "react";
-import cornerImage from "../assets/img/cornerImage.png";
+import cornerImage from "../../assets/img/cornerImage.png";
 export default function VintageBorder({
   children,
 }: {

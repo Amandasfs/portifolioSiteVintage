@@ -1,5 +1,5 @@
 import { CheckCircle2, Clock } from "lucide-react";
-import type { Guest } from "../../types/Guest";
+import type { Guest } from "../../types/guest";
 
 interface GuestListTabProps {
   confirmados: Guest[];

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Plus, Edit2, Trash2, Save, ExternalLink, Image as ImageIcon, Unlock } from "lucide-react";
 import { supabase } from "../../config/supabase";
-import type { GiftItem } from "../../types/Guest";
+import type { GiftItem } from "../../types/guest";
 
 export default function ManageGiftsTab({ gifts, onRefresh }: { gifts: GiftItem[], onRefresh: () => void }) {
   const [view, setView] = useState<'list' | 'form'>('list');
