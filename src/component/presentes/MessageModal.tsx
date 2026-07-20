@@ -7,35 +7,22 @@ interface ReservaPendente {
 
 interface MessageModalProps {
   reservaPendente: ReservaPendente;
-
   mensagemConvidado: string;
   nomeConvidado: string;
-
   salvando: boolean;
-
-  onMensagemChange: (
-    value: string,
-  ) => void;
-
-  onNomeChange: (
-    value: string,
-  ) => void;
-
+  onMensagemChange: (value: string) => void;
+  onNomeChange: (value: string) => void;
   onCancelar: () => void;
   onConfirmar: () => void;
 }
 
 export default function MessageModal({
   reservaPendente,
-
   mensagemConvidado,
   nomeConvidado,
-
   salvando,
-
   onMensagemChange,
   onNomeChange,
-
   onCancelar,
   onConfirmar,
 }: MessageModalProps) {
@@ -48,8 +35,9 @@ export default function MessageModal({
         flex
         items-center
         justify-center
-        p-4
-        bg-black/70
+        p-3
+        sm:p-6
+        bg-black/75
         backdrop-blur-sm
       "
     >
@@ -58,94 +46,101 @@ export default function MessageModal({
           relative
           w-full
           max-w-2xl
+          rounded-[24px]
+          sm:rounded-[28px]
+          shadow-[0_20px_60px_rgba(0,0,0,.55)]
           overflow-hidden
-          rounded-[28px]
-          shadow-[0_20px_60px_rgba(0,0,0,.45)]
+          transition-all
+          duration-300
         "
       >
-        {/* Moldura */}
-
+        {/* Moldura Fina Vintage */}
         <div
           className="
             absolute
             inset-0
-            rounded-[28px]
+            rounded-[24px]
+            sm:rounded-[28px]
             pointer-events-none
+            z-20
           "
           style={{
-            border:
-              "2px solid #DE9B72",
+            border: "2px solid #DE9B72",
+            margin: "4px", // Deixa um pequeno recuo charmoso na borda
           }}
         />
 
-        {/* Papel */}
-
+        {/* Papel Pergaminho com Scroll Suave */}
         <div
           className="
             relative
-            p-8
+            p-5
+            xs:p-6
+            sm:p-8
             md:p-10
+            max-h-[calc(100vh-2rem)]
+            overflow-y-auto
+            overflow-x-hidden
+            scrollbar-thin
           "
           style={{
-            backgroundColor:
-              "#f5deb3",
-
-            backgroundImage:
-              "url('https://www.transparenttextures.com/patterns/paper-fibers.png')",
+            backgroundColor: "#f5deb3",
+            backgroundImage: "url('https://www.transparenttextures.com/patterns/paper-fibers.png')",
+            backgroundAttachment: "local", // Faz a textura acompanhar o scroll perfeitamente
           }}
         >
-          {/* Mancha envelhecida */}
-
+          {/* Mancha envelhecida estática de fundo */}
           <div
             className="
               absolute
               inset-0
               pointer-events-none
-              opacity-40
+              opacity-45
+              z-0
             "
             style={{
               background: `
                 radial-gradient(
                   circle at top left,
-                  rgba(75,34,4,.12),
-                  transparent 30%
+                  rgba(75,34,4,.15),
+                  transparent 35%
                 ),
                 radial-gradient(
                   circle at bottom right,
-                  rgba(75,34,4,.12),
-                  transparent 40%
+                  rgba(75,34,4,.15),
+                  transparent 45%
                 )
               `,
             }}
           />
 
-          <div className="relative z-10">
+          <div className="relative z-10 flex flex-col justify-between h-full">
             {/* Cabeçalho */}
-
-            <div className="text-center mb-8">
+            <div className="text-center mb-5 sm:mb-8">
               <div
                 className="
                   flex
                   items-center
                   justify-center
-                  gap-4
-                  mb-4
+                  gap-3
+                  sm:gap-4
+                  mb-3
                 "
               >
-                <div className="h-px w-16 bg-[#DE9B72]" />
-
-                <span className="text-[#DE9B72]">
-                  𓆩♡𓆪
-                </span>
-
-                <div className="h-px w-16 bg-[#DE9B72]" />
+                <div className="h-px w-10 sm:w-16 bg-[#DE9B72]/70" />
+                <span className="text-[#DE9B72] text-xs sm:text-base select-none">𓆩♡𓆪</span>
+                <div className="h-px w-10 sm:w-16 bg-[#DE9B72]/70" />
               </div>
 
               <h2
                 className="
                   font-romantic
-                  text-5xl
+                  text-3xl
+                  xs:text-4xl
+                  sm:text-5xl
                   text-highlight3
+                  tracking-wide
+                  leading-tight
                 "
               >
                 Uma Mensagem
@@ -153,169 +148,153 @@ export default function MessageModal({
 
               <p
                 className="
-                  mt-3
+                  mt-2
+                  sm:mt-3
+                  text-xs
+                  sm:text-base
                   text-highlight3/80
+                  px-2
                 "
               >
-                {reservaPendente.tipo ===
-                "skip"
-                  ? "Ficamos felizes com sua presença."
-                  : (
-                      <>
-                        Você escolheu:
-                        <br />
-
-                        <strong>
-                          {
-                            reservaPendente.nome
-                          }
-                        </strong>
-                      </>
-                    )}
+                {reservaPendente.tipo === "skip" ? (
+                  "Ficamos felizes com sua presença."
+                ) : (
+                  <>
+                    Você escolheu:
+                    <br />
+                    <strong className="break-words font-semibold text-highlight3">
+                      {reservaPendente.nome}
+                    </strong>
+                  </>
+                )}
               </p>
             </div>
 
-            {/* Mensagem */}
+            {/* Corpo / Inputs */}
+            <div className="space-y-4 sm:space-y-6">
+              {/* Mensagem */}
+              <div>
+                <label
+                  className="
+                    block
+                    mb-1.5
+                    text-xs
+                    sm:text-sm
+                    text-highlight3/90
+                    font-medium
+                    tracking-wide
+                  "
+                >
+                  Sua mensagem aos noivos
+                </label>
+                <textarea
+                  value={mensagemConvidado}
+                  onChange={(e) => onMensagemChange(e.target.value)}
+                  placeholder="Escreva aqui uma mensagem especial..."
+                  className="
+                    w-full
+                    h-28
+                    sm:h-36
+                    resize-none
+                    rounded-xl
+                    border
+                    border-[#DE9B72]/40
+                    bg-white/40
+                    p-3
+                    sm:p-4
+                    text-sm
+                    text-highlight3
+                    placeholder-highlight3/40
+                    focus:outline-none
+                    focus:border-[#DE9B72]
+                    focus:bg-white/60
+                    shadow-inner
+                    transition-all
+                  "
+                />
+              </div>
 
-            <div className="mb-6">
-              <label
-                className="
-                  block
-                  mb-2
-                  text-highlight3
-                  font-semibold
-                "
-              >
-                Sua mensagem aos noivos
-              </label>
-
-              <textarea
-                value={
-                  mensagemConvidado
-                }
-                onChange={(e) =>
-                  onMensagemChange(
-                    e.target.value,
-                  )
-                }
-                placeholder="Escreva aqui uma mensagem especial..."
-                className="
-                  w-full
-                  h-40
-                  resize-none
-
-                  rounded-2xl
-
-                  border-2
-                  border-[#DE9B72]/50
-
-                  bg-white/50
-
-                  p-4
-
-                  text-highlight3
-
-                  focus:outline-none
-                  focus:border-[#DE9B72]
-                "
-              />
+              {/* Nome */}
+              <div>
+                <label
+                  className="
+                    block
+                    mb-1.5
+                    text-xs
+                    sm:text-sm
+                    text-highlight3/90
+                    font-medium
+                    tracking-wide
+                  "
+                >
+                  Assinatura (Opcional)
+                </label>
+                <input
+                  type="text"
+                  value={nomeConvidado}
+                  onChange={(e) => onNomeChange(e.target.value)}
+                  placeholder="Seu nome"
+                  className="
+                    w-full
+                    rounded-xl
+                    border
+                    border-[#DE9B72]/40
+                    bg-white/40
+                    p-3
+                    sm:p-4
+                    text-sm
+                    text-highlight3
+                    placeholder-highlight3/40
+                    focus:outline-none
+                    focus:border-[#DE9B72]
+                    focus:bg-white/60
+                    shadow-inner
+                    transition-all
+                  "
+                />
+              </div>
             </div>
 
-            {/* Nome */}
-
-            <div className="mb-8">
-              <label
-                className="
-                  block
-                  mb-2
-                  text-highlight3
-                  font-semibold
-                "
-              >
-                Assinatura (Opcional)
-              </label>
-
-              <input
-                type="text"
-                value={nomeConvidado}
-                onChange={(e) =>
-                  onNomeChange(
-                    e.target.value,
-                  )
-                }
-                placeholder="Seu nome"
-                className="
-                  w-full
-
-                  rounded-2xl
-
-                  border-2
-                  border-[#DE9B72]/50
-
-                  bg-white/50
-
-                  p-4
-
-                  text-highlight3
-
-                  focus:outline-none
-                  focus:border-[#DE9B72]
-                "
-              />
-            </div>
-
-            {/* Assinatura visual */}
-
-            <div className="mb-8 text-center">
-              <p
-                className="
-                  font-romantic
-                  text-3xl
-                  text-highlight3
-                "
-              >
+            {/* Assinatura visual romântica */}
+            <div className="my-6 sm:my-8 text-center select-none decoration-clone">
+              <p className="font-romantic text-xl sm:text-2xl text-highlight3/90">
                 Com carinho,
               </p>
-
-              <p
-                className="
-                  font-romantic
-                  text-4xl
-                  text-highlight3
-                "
-              >
+              <p className="font-romantic text-2xl sm:text-4xl text-highlight3 mt-0.5 sm:mt-1">
                 Milene & Gabriel
               </p>
             </div>
 
-            {/* Botões */}
-
+            {/* Botões do Rodapé */}
             <div
               className="
                 flex
-                flex-col
+                flex-col-reverse
                 sm:flex-row
                 justify-center
-                gap-4
+                gap-2.5
+                sm:gap-4
               "
             >
               <button
                 onClick={onCancelar}
                 disabled={salvando}
                 className="
-                  px-6
-                  py-3
-
+                  w-full
+                  sm:w-32
+                  px-5
+                  py-2.5
+                  sm:py-3
                   rounded-xl
-
-                  border-2
+                  border
                   border-[#DE9B72]
-
                   text-highlight3
-
-                  hover:bg-[#DE9B72]/20
-
-                  transition
+                  font-medium
+                  text-sm
+                  hover:bg-[#DE9B72]/15
+                  active:bg-[#DE9B72]/25
+                  disabled:opacity-50
+                  transition-all
                 "
               >
                 Voltar
@@ -325,27 +304,30 @@ export default function MessageModal({
                 onClick={onConfirmar}
                 disabled={salvando}
                 className="
-                  px-8
-                  py-3
-
+                  w-full
+                  sm:w-auto
+                  sm:min-w-44
+                  px-6
+                  py-2.5
+                  sm:py-3
                   rounded-xl
-
                   bg-details
-
                   text-background
-
-                  border-2
+                  border
                   border-[#DE9B72]
-
-                  hover:brightness-110
-
-                  transition
+                  font-semibold
+                  text-sm
+                  tracking-wide
+                  hover:brightness-105
+                  active:brightness-95
+                  disabled:opacity-50
+                  shadow-md
+                  transition-all
                 "
               >
                 {salvando
                   ? "Salvando..."
-                  : reservaPendente.tipo ===
-                    "pix"
+                  : reservaPendente.tipo === "pix"
                   ? "Gerar PIX"
                   : "Confirmar"}
               </button>

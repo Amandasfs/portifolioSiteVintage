@@ -165,7 +165,6 @@ Deus permanece em nós, e o seu amor é aperfeiçoado em nós."
         <PixModal
           chave={mostrarPixModal.chave}
           nomePresente={mostrarPixModal.nomePresente}
-          payload={mostrarPixModal.payload}
           onClose={() =>
             setMostrarPixModal(null)
           }
