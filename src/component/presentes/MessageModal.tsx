@@ -1,3 +1,6 @@
+// Certifique-se de que o caminho do import da imagem está correto para este arquivo
+import cornerImage from "../../assets/img/cornerImage.png";
+
 interface ReservaPendente {
   id: string;
   tipo: "compra" | "pix" | "skip";
@@ -35,9 +38,8 @@ export default function MessageModal({
         flex
         items-center
         justify-center
-        p-3
-        sm:p-6
-        bg-black/75
+        p-4
+        bg-black/70
         backdrop-blur-sm
       "
     >
@@ -46,73 +48,109 @@ export default function MessageModal({
           relative
           w-full
           max-w-2xl
-          rounded-[24px]
-          sm:rounded-[28px]
-          shadow-[0_20px_60px_rgba(0,0,0,.55)]
+          rounded-2xl
           overflow-hidden
-          transition-all
-          duration-300
+          shadow-2xl
         "
       >
-        {/* Moldura Fina Vintage */}
+        {/* Moldura externa dourada */}
         <div
           className="
             absolute
             inset-0
-            rounded-[24px]
-            sm:rounded-[28px]
+            rounded-2xl
             pointer-events-none
             z-20
           "
           style={{
             border: "2px solid #DE9B72",
-            margin: "4px", // Deixa um pequeno recuo charmoso na borda
+            boxShadow: `
+              0 0 0 3px rgba(222,155,114,.15),
+              0 0 0 6px rgba(222,155,114,.08)
+            `,
           }}
         />
 
-        {/* Fundo Verde Elegante com Backdrop Blur e Textura */}
+        {/* Fundo Verde com Textura correspondente à primeira tela */}
         <div
           className="
             relative
-            p-5
-            xs:p-6
+            p-6
             sm:p-8
             md:p-10
             max-h-[calc(100vh-2rem)]
             overflow-y-auto
             overflow-x-hidden
             scrollbar-thin
-            backdrop-blur-md
           "
           style={{
-            backgroundColor: "rgba(58, 85, 68, 0.95)", // #3A5544 com opacidade alta para o modal isolar bem o fundo
-            backgroundImage: "url('https://www.transparenttextures.com/patterns/paper-fibers.png')",
-            backgroundAttachment: "local",
+            backgroundColor: "#4d6648",
+            backgroundImage: "url('https://www.transparenttextures.com/patterns/old-wall.png')",
           }}
         >
-          {/* Mancha suave estática de fundo para dar profundidade ao verde */}
-          <div
+          {/* Cantos decorativos idênticos */}
+          <img
+            src={cornerImage}
+            alt=""
+            aria-hidden="true"
             className="
               absolute
-              inset-0
-              pointer-events-none
-              opacity-25
-              z-0
+              top-0
+              left-0
+              w-14
+              h-14
+              opacity-90
+              z-10
             "
-            style={{
-              background: `
-                radial-gradient(
-                  circle at top left,
-                  rgba(222,155,114,.15),
-                  transparent 45%
-                ),
-                radial-gradient(
-                  circle at bottom right,
-                  rgba(0,0,0,.3),
-                  transparent 50%
-                )
-              `,
-            }}
+          />
+
+          <img
+            src={cornerImage}
+            alt=""
+            aria-hidden="true"
+            className="
+              absolute
+              top-0
+              right-0
+              w-14
+              h-14
+              scale-x-[-1]
+              opacity-90
+              z-10
+            "
+          />
+
+          <img
+            src={cornerImage}
+            alt=""
+            aria-hidden="true"
+            className="
+              absolute
+              bottom-0
+              left-0
+              w-14
+              h-14
+              scale-y-[-1]
+              opacity-90
+              z-10
+            "
+          />
+
+          <img
+            src={cornerImage}
+            alt=""
+            aria-hidden="true"
+            className="
+              absolute
+              bottom-0
+              right-0
+              w-14
+              h-14
+              scale-x-[-1]
+              scale-y-[-1]
+              opacity-90
+              z-10
+            "
           />
 
           <div className="relative z-10 flex flex-col justify-between h-full">
