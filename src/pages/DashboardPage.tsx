@@ -19,7 +19,6 @@ export default function DashboardPage() {
   const [groups, setGroups] = useState<GuestGroup[]>([]);
   const [gifts, setGifts] = useState<GiftItem[]>([]);
   const [allGuests, setAllGuests] = useState<Guest[]>([]);
-  const [totalArrecadado, setTotalArrecadado] = useState(0);
   const [couplePix, setCouplePix] = useState("");
   const [coupleToken, setCoupleToken] = useState("");
 
@@ -38,7 +37,6 @@ export default function DashboardPage() {
 
       const { data: groupsData } = await supabase.from('vw_guest_groups').select('*, guests:vw_guests(*)');
       const { data: giftsData } = await supabase.from('vw_gifts').select('*');
-      const { data: contributionsData } = await supabase.from('vw_contributions').select('amount').eq('payment_status', 'paid');
 
       if (groupsData) {
         setGroups(groupsData as GuestGroup[]);
@@ -49,9 +47,6 @@ export default function DashboardPage() {
           });
         });
         setAllGuests(guestsList);
-        
-        const totalDinheiro = contributionsData?.reduce((acc, curr) => acc + Number(curr.amount), 0) || 0;
-        setTotalArrecadado(totalDinheiro);
       }
       
       if (giftsData) setGifts(giftsData);
@@ -83,40 +78,43 @@ export default function DashboardPage() {
       {/* CABEÇALHO */}
       {/* ========================================== */}
       <div className="w-full max-w-6xl flex flex-col md:flex-row justify-between items-start md:items-center gap-6 animate-in fade-in slide-in-from-top-8 duration-700">
+        
+        {/* Plaquinha Unificada com Efeito Rústico */}
         <div className="flex flex-col items-start">
           <div 
-            className="relative px-8 py-3 md:px-10 md:py-4 rounded-lg shadow-[0_10px_30px_rgba(0,0,0,0.4)] border-4 border-[#3e2723] inline-block"
-            style={{ backgroundColor: "#6d4c41", backgroundImage: "url('https://www.transparenttextures.com/patterns/wood-pattern.png')" }}
+            className="relative px-10 py-5 md:px-12 md:py-6 rounded-xl shadow-[0_20px_40px_rgba(0,0,0,0.45)] inline-block bg-cover bg-center text-center md:text-left overflow-hidden border border-amber-950/20"
+            style={{ backgroundImage: "url('https://images.pexels.com/photos/172289/pexels-photo-172289.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')" }}
           >
-            <div className="absolute inset-0 shadow-[inset_0_0_20px_rgba(0,0,0,0.8)] pointer-events-none rounded-sm"></div>
-            <div className="absolute top-1/2 left-3 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-[#2d1b15] shadow-[inset_0_1px_3px_rgba(0,0,0,0.8),_0_1px_1px_rgba(255,255,255,0.2)]"></div>
-            <div className="absolute top-1/2 right-3 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-[#2d1b15] shadow-[inset_0_1px_3px_rgba(0,0,0,0.8),_0_1px_1px_rgba(255,255,255,0.2)]"></div>
-            <h1 className="text-2xl md:text-4xl font-romantic text-[#f5deb3] drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] tracking-wide">
-              Painel dos Noivos
-            </h1>
+            {/* Sombra interna e escuridão suave para destacar as letras */}
+            <div className="absolute inset-0 bg-black/35 shadow-[inset_0_0_30px_rgba(0,0,0,0.6)] rounded-xl pointer-events-none"></div>
+            
+            {/* Elementos decorativos (Parafusos rústicos com sombra) */}
+            <div className="absolute top-1/2 left-3.5 -translate-y-1/2 w-3 h-3 rounded-full bg-amber-950/90 shadow-[inset_0_1px_3px_rgba(0,0,0,0.8),_0_2px_4px_rgba(0,0,0,0.4)]"></div>
+            <div className="absolute top-1/2 right-3.5 -translate-y-1/2 w-3 h-3 rounded-full bg-amber-950/90 shadow-[inset_0_1px_3px_rgba(0,0,0,0.8),_0_2px_4px_rgba(0,0,0,0.4)]"></div>
+            
+            {/* Conteúdo Interno da Placa */}
+            <div className="relative z-10 flex flex-col gap-1.5 px-4">
+              <h1 className="text-3xl md:text-5xl font-serif text-amber-100 drop-shadow-[0_4px_6px_rgba(0,0,0,0.9)] tracking-wider font-bold">
+                Painel dos Noivos
+              </h1>
+              <h2 className="text-lg md:text-xl font-serif text-amber-200/95 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] font-medium italic tracking-wide">
+                Bem-vindos Milene & Gabriel
+              </h2>
+            </div>
           </div>
-          <h2 className="text-lg md:text-xl font-romantic text-highlight3 mt-2 ml-2 drop-shadow-sm">
-            Bem-vindos Milene & Gabriel
-          </h2>
         </div>
 
-        <div className="flex items-center gap-4 bg-white/60 backdrop-blur-sm border-2 border-[#DE9B72]/40 rounded-xl p-3 shadow-lg">
-          <div className="px-4 py-2 bg-[#DE9B72]/10 rounded-lg border border-[#DE9B72]/30 flex flex-col md:flex-row items-start md:items-center gap-1 md:gap-3">
-            <span className="text-[10px] font-sans font-bold text-highlight3 uppercase tracking-widest">Total Pix:</span>
-            <span className="text-xl md:text-2xl font-romantic text-details">
-              {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalArrecadado)}
-            </span>
-          </div>
-          <div className="h-10 w-px bg-[#DE9B72]/30 hidden md:block"></div>
+        {/* Botão de Sair Alinhado à Direita */}
+        <div className="flex items-center bg-white/50 backdrop-blur-sm border border-[#DE9B72]/30 rounded-xl p-2.5 shadow-md self-end md:self-center">
           <button 
             onClick={() => {
               localStorage.removeItem('casamento_role');
               localStorage.removeItem('couple_id');
               navigate('/');
             }} 
-            className="flex items-center gap-2 text-red-600/80 hover:text-red-700 transition-colors font-sans text-xs font-bold uppercase tracking-widest px-2"
+            className="flex items-center gap-2 text-red-700/80 hover:text-red-800 transition-colors font-sans text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-lg hover:bg-red-50/50"
           >
-            <LogOut size={16} /> <span className="hidden md:inline">Sair</span>
+            <LogOut size={16} /> <span>Sair</span>
           </button>
         </div>
       </div>
