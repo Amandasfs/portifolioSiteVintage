@@ -1,7 +1,6 @@
 import pixNoivos from "../../assets/img/pixnoivos.jpeg";
 
 interface PixModalProps {
-  chave: string;
   nomePresente: string;
 
   onClose: () => void;
@@ -9,16 +8,20 @@ interface PixModalProps {
 }
 
 export default function PixModal({
-  chave,
   nomePresente,
   onClose,
   onSuccess,
 }: PixModalProps) {
+  const codigoPix =
+    "00020126580014BR.GOV.BCB.PIX013630432049-4afc-4d59-a3cf-799b9f6db7e15204000053039865802BR5925Milene Monteiro de Moraes6009SAO PAULO62140510ARNgXpoC016304E48D";
+
   const copiarPix = async () => {
-    await navigator.clipboard.writeText(chave);
+    await navigator.clipboard.writeText(
+      codigoPix,
+    );
 
     alert(
-      "Chave PIX copiada para a área de transferência.",
+      "Código PIX copiado para a área de transferência.",
     );
   };
 
@@ -28,24 +31,30 @@ export default function PixModal({
         fixed
         inset-0
         z-50
+
         flex
         items-center
         justify-center
+
         p-4
-        bg-black/70
-        backdrop-blur-sm
+
+        bg-black/80
+        backdrop-blur-md
       "
     >
       <div
         className="
           relative
+
           w-full
           max-w-xl
+
           max-h-[95vh]
           overflow-y-auto
-          rounded-2xl
-          md:rounded-[28px]
-          shadow-[0_20px_60px_rgba(0,0,0,.45)]
+
+          rounded-3xl
+
+          shadow-[0_25px_80px_rgba(0,0,0,.55)]
         "
       >
         {/* Moldura */}
@@ -54,8 +63,7 @@ export default function PixModal({
           className="
             absolute
             inset-0
-            rounded-2xl
-            md:rounded-[28px]
+            rounded-3xl
             pointer-events-none
           "
           style={{
@@ -63,15 +71,15 @@ export default function PixModal({
           }}
         />
 
-        {/* Papel */}
+        {/* Fundo */}
 
         <div
           className="
             relative
+
             p-5
-            sm:p-6
-            md:p-8
-            lg:p-10
+            sm:p-7
+            md:p-10
           "
           style={{
             backgroundColor: "#f5deb3",
@@ -79,7 +87,7 @@ export default function PixModal({
               "url('https://www.transparenttextures.com/patterns/paper-fibers.png')",
           }}
         >
-          {/* Envelhecimento */}
+          {/* Mancha de papel */}
 
           <div
             className="
@@ -108,31 +116,21 @@ export default function PixModal({
             {/* Cabeçalho */}
 
             <div className="text-center mb-8">
-              <div
-                className="
-                  flex
-                  items-center
-                  justify-center
-                  gap-3
-                  sm:gap-4
-                  mb-4
-                "
-              >
-                <div className="h-px w-8 sm:w-12 md:w-16 bg-[#DE9B72]" />
-
-                <span className="text-[#DE9B72]">
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <div className="h-px w-10 sm:w-16 bg-[#DE9B72]" />
+                <span className="text-[#DE9B72] text-lg">
                   𓆩♡𓆪
                 </span>
-
-                <div className="h-px w-8 sm:w-12 md:w-16 bg-[#DE9B72]" />
+                <div className="h-px w-10 sm:w-16 bg-[#DE9B72]" />
               </div>
 
               <h2
                 className="
-                  font-romantic
                   text-3xl
                   sm:text-4xl
                   md:text-5xl
+
+                  font-bold
                   text-highlight3
                 "
               >
@@ -141,12 +139,12 @@ export default function PixModal({
 
               <p
                 className="
-                  mt-3
+                  mt-4
+
                   text-sm
                   sm:text-base
+
                   text-highlight3/80
-                  leading-6
-                  sm:leading-7
                 "
               >
                 Sua contribuição será uma
@@ -156,11 +154,10 @@ export default function PixModal({
 
             {/* Presente */}
 
-            <div className="mb-8 text-center">
+            <div className="text-center mb-8">
               <span
                 className="
                   text-xs
-                  sm:text-sm
                   uppercase
                   tracking-[0.25em]
                   text-highlight
@@ -172,29 +169,30 @@ export default function PixModal({
               <h3
                 className="
                   mt-2
+
                   text-xl
                   sm:text-2xl
-                  md:text-3xl
-                  font-romantic
+
+                  font-semibold
                   text-highlight3
+
                   break-words
-                  px-2
                 "
               >
                 {nomePresente}
               </h3>
             </div>
 
-            {/* IMAGEM DO QR CODE */}
+            {/* QR Code */}
 
             <div className="flex justify-center mb-8">
               <div
                 className="
                   p-3
                   sm:p-4
-                  md:p-5
-                  rounded-[24px]
-                  md:rounded-[32px]
+
+                  rounded-[28px]
+
                   shadow-xl
                 "
                 style={{
@@ -205,10 +203,11 @@ export default function PixModal({
                 <div
                   className="
                     bg-white
+
                     p-3
-                    md:p-4
-                    rounded-[18px]
-                    md:rounded-[24px]
+                    sm:p-4
+
+                    rounded-[22px]
                   "
                 >
                   <img
@@ -218,120 +217,125 @@ export default function PixModal({
                       w-[180px]
                       h-[180px]
 
-                      sm:w-[220px]
-                      sm:h-[220px]
+                      sm:w-[240px]
+                      sm:h-[240px]
 
-                      md:w-[260px]
-                      md:h-[260px]
+                      md:w-[280px]
+                      md:h-[280px]
 
                       object-contain
-                      rounded-lg
                     "
                   />
                 </div>
               </div>
             </div>
 
-            {/* Chave PIX */}
-
-            <div className="mb-6 text-center">
-              <p
-                className="
-                  text-xs
-                  uppercase
-                  tracking-widest
-                  text-highlight
-                  mb-2
-                "
-              >
-                Chave PIX
-              </p>
-
-              <p
-                className="
-                  text-highlight3
-                  text-xs
-                  sm:text-sm
-                  font-medium
-                  break-all
-                  select-all
-                  px-2
-                "
-              >
-                {chave}
-              </p>
-            </div>
-
             {/* Informação */}
 
             <div
               className="
-                mb-8
-                p-4
-                sm:p-5
-                rounded-xl
-                md:rounded-2xl
+                mb-6
+
+                rounded-2xl
+
                 border
                 border-[#DE9B72]/40
-                bg-white/30
+
+                bg-white/40
+
+                p-5
               "
             >
               <p
                 className="
                   text-center
                   text-highlight3
-                  text-sm
-                  sm:text-base
-                  leading-6
-                  sm:leading-7
+                  leading-7
                 "
               >
-                Escolha livremente o valor da sua contribuição.
+                Escaneie o QR Code ou utilize o
+                PIX Copia e Cola abaixo.
               </p>
             </div>
 
-            {/* Copiar PIX */}
+            {/* PIX Copia e Cola */}
 
             <div
               className="
                 mb-8
-                rounded-xl
-                md:rounded-2xl
+
+                rounded-2xl
+
                 border
                 border-[#DE9B72]/40
-                bg-white/40
-                p-3
-                sm:p-4
+
+                bg-white/50
+
+                p-4
               "
             >
               <p
                 className="
                   text-center
+
                   text-xs
                   uppercase
+
                   tracking-[0.2em]
+
                   text-highlight
+
                   mb-3
                 "
               >
-                Chave PIX
+                PIX Copia e Cola
               </p>
+
+              <div
+                className="
+                  rounded-xl
+
+                  bg-white/70
+
+                  border
+                  border-[#DE9B72]/30
+
+                  p-3
+
+                  text-xs
+                  text-highlight3
+
+                  break-all
+                  select-all
+
+                  mb-4
+                "
+              >
+                {codigoPix}
+              </div>
 
               <button
                 onClick={copiarPix}
                 className="
                   w-full
+
                   py-3
+
                   rounded-xl
+
                   bg-details
+
                   text-background
+
                   border-2
                   border-[#DE9B72]
+
                   hover:brightness-110
+
                   transition
                 "
               >
-                Copiar Chave PIX
+                Copiar Código PIX
               </button>
             </div>
 
@@ -340,9 +344,9 @@ export default function PixModal({
             <div className="text-center mb-8">
               <p
                 className="
-                  font-romantic
-                  text-2xl
-                  sm:text-3xl
+                  text-xl
+                  sm:text-2xl
+
                   text-highlight3
                 "
               >
@@ -351,9 +355,13 @@ export default function PixModal({
 
               <p
                 className="
-                  font-romantic
-                  text-3xl
-                  sm:text-4xl
+                  mt-1
+
+                  text-2xl
+                  sm:text-3xl
+
+                  font-semibold
+
                   text-highlight3
                 "
               >
@@ -368,8 +376,9 @@ export default function PixModal({
                 flex
                 flex-col
                 sm:flex-row
+
                 gap-3
-                sm:gap-4
+
                 justify-center
               "
             >
@@ -378,13 +387,19 @@ export default function PixModal({
                 className="
                   w-full
                   sm:w-auto
+
                   px-6
                   py-3
+
                   rounded-xl
+
                   border-2
                   border-[#DE9B72]
+
                   text-highlight3
+
                   hover:bg-[#DE9B72]/20
+
                   transition
                 "
               >
@@ -396,14 +411,21 @@ export default function PixModal({
                 className="
                   w-full
                   sm:w-auto
+
                   px-8
                   py-3
+
                   rounded-xl
+
                   bg-details
+
                   text-background
+
                   border-2
                   border-[#DE9B72]
+
                   hover:brightness-110
+
                   transition
                 "
               >
