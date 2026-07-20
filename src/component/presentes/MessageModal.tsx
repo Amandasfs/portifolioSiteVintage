@@ -70,7 +70,7 @@ export default function MessageModal({
           }}
         />
 
-        {/* Papel Pergaminho com Scroll Suave */}
+        {/* Fundo Verde Elegante com Backdrop Blur e Textura */}
         <div
           className="
             relative
@@ -82,33 +82,34 @@ export default function MessageModal({
             overflow-y-auto
             overflow-x-hidden
             scrollbar-thin
+            backdrop-blur-md
           "
           style={{
-            backgroundColor: "#f5deb3",
+            backgroundColor: "rgba(58, 85, 68, 0.95)", // #3A5544 com opacidade alta para o modal isolar bem o fundo
             backgroundImage: "url('https://www.transparenttextures.com/patterns/paper-fibers.png')",
-            backgroundAttachment: "local", // Faz a textura acompanhar o scroll perfeitamente
+            backgroundAttachment: "local",
           }}
         >
-          {/* Mancha envelhecida estática de fundo */}
+          {/* Mancha suave estática de fundo para dar profundidade ao verde */}
           <div
             className="
               absolute
               inset-0
               pointer-events-none
-              opacity-45
+              opacity-25
               z-0
             "
             style={{
               background: `
                 radial-gradient(
                   circle at top left,
-                  rgba(75,34,4,.15),
-                  transparent 35%
+                  rgba(222,155,114,.15),
+                  transparent 45%
                 ),
                 radial-gradient(
                   circle at bottom right,
-                  rgba(75,34,4,.15),
-                  transparent 45%
+                  rgba(0,0,0,.3),
+                  transparent 50%
                 )
               `,
             }}
@@ -138,7 +139,7 @@ export default function MessageModal({
                   text-3xl
                   xs:text-4xl
                   sm:text-5xl
-                  text-highlight3
+                  text-[#F8EDEB]
                   tracking-wide
                   leading-tight
                 "
@@ -152,7 +153,7 @@ export default function MessageModal({
                   sm:mt-3
                   text-xs
                   sm:text-base
-                  text-highlight3/80
+                  text-[#F8EDEB]/80
                   px-2
                 "
               >
@@ -162,7 +163,7 @@ export default function MessageModal({
                   <>
                     Você escolheu:
                     <br />
-                    <strong className="break-words font-semibold text-highlight3">
+                    <strong className="break-words font-semibold text-[#DE9B72]">
                       {reservaPendente.nome}
                     </strong>
                   </>
@@ -180,7 +181,7 @@ export default function MessageModal({
                     mb-1.5
                     text-xs
                     sm:text-sm
-                    text-highlight3/90
+                    text-[#F8EDEB]/90
                     font-medium
                     tracking-wide
                   "
@@ -199,15 +200,17 @@ export default function MessageModal({
                     rounded-xl
                     border
                     border-[#DE9B72]/40
-                    bg-white/40
+                    bg-black/20
                     p-3
                     sm:p-4
                     text-sm
-                    text-highlight3
-                    placeholder-highlight3/40
+                    text-[#F8EDEB]
+                    placeholder-[#DE9B72]/50
                     focus:outline-none
                     focus:border-[#DE9B72]
-                    focus:bg-white/60
+                    focus:ring-1
+                    focus:ring-[#DE9B72]
+                    focus:bg-black/30
                     shadow-inner
                     transition-all
                   "
@@ -222,7 +225,7 @@ export default function MessageModal({
                     mb-1.5
                     text-xs
                     sm:text-sm
-                    text-highlight3/90
+                    text-[#F8EDEB]/90
                     font-medium
                     tracking-wide
                   "
@@ -239,15 +242,17 @@ export default function MessageModal({
                     rounded-xl
                     border
                     border-[#DE9B72]/40
-                    bg-white/40
+                    bg-black/20
                     p-3
                     sm:p-4
                     text-sm
-                    text-highlight3
-                    placeholder-highlight3/40
+                    text-[#F8EDEB]
+                    placeholder-[#DE9B72]/50
                     focus:outline-none
                     focus:border-[#DE9B72]
-                    focus:bg-white/60
+                    focus:ring-1
+                    focus:ring-[#DE9B72]
+                    focus:bg-black/30
                     shadow-inner
                     transition-all
                   "
@@ -257,10 +262,10 @@ export default function MessageModal({
 
             {/* Assinatura visual romântica */}
             <div className="my-6 sm:my-8 text-center select-none decoration-clone">
-              <p className="font-romantic text-xl sm:text-2xl text-highlight3/90">
+              <p className="font-romantic text-xl sm:text-2xl text-[#F8EDEB]/90">
                 Com carinho,
               </p>
-              <p className="font-romantic text-2xl sm:text-4xl text-highlight3 mt-0.5 sm:mt-1">
+              <p className="font-romantic text-2xl sm:text-4xl text-[#DE9B72] mt-0.5 sm:mt-1">
                 Milene & Gabriel
               </p>
             </div>
@@ -288,7 +293,7 @@ export default function MessageModal({
                   rounded-xl
                   border
                   border-[#DE9B72]
-                  text-highlight3
+                  text-[#F8EDEB]
                   font-medium
                   text-sm
                   hover:bg-[#DE9B72]/15
@@ -311,14 +316,18 @@ export default function MessageModal({
                   py-2.5
                   sm:py-3
                   rounded-xl
-                  bg-details
-                  text-background
-                  border
-                  border-[#DE9B72]
-                  font-semibold
+                  bg-gradient-to-r
+                  from-[#442D1C]
+                  to-[#5A3A24]
+                  text-[#F8EDEB]
+                  border-2
+                  border-[#DE9B72]/40
+                  font-bold
                   text-sm
-                  tracking-wide
-                  hover:brightness-105
+                  uppercase
+                  tracking-wider
+                  hover:brightness-110
+                  hover:scale-[1.01]
                   active:brightness-95
                   disabled:opacity-50
                   shadow-md
