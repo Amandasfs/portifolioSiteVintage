@@ -219,7 +219,7 @@ export default function PageHeaderP() {
                   leading-8
                 "
               >
-                Sua presença é o maior presente que
+                Ela é o maior presente que
                 poderíamos receber.
 
                 <br />
