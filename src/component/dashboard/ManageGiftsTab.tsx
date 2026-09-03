@@ -54,7 +54,7 @@ export default function ManageGiftsTab({ gifts, onRefresh }: { gifts: GiftItem[]
       
       onRefresh();
       setView('list');
-    } catch (err) {
+    } catch {
       alert("Erro ao salvar o presente.");
     } finally {
       setSaving(false);
@@ -72,7 +72,7 @@ export default function ManageGiftsTab({ gifts, onRefresh }: { gifts: GiftItem[]
     try {
       await supabase.from('vw_gifts').update({ is_reserved: false, reservation_type: null }).eq('id', id);
       onRefresh();
-    } catch (err) {
+    } catch {
       alert("Erro ao liberar o presente.");
     }
   };
@@ -96,14 +96,14 @@ export default function ManageGiftsTab({ gifts, onRefresh }: { gifts: GiftItem[]
           </div>
           
           <div>
-            <label className="block text-xs font-bold text-highlight3 uppercase tracking-wider mb-1 flex items-center gap-2">
+            <label className="text-xs font-bold text-highlight3 uppercase tracking-wider mb-1 flex items-center gap-2">
               Link da Loja <span className="text-[9px] text-highlight/60">(Opcional)</span>
             </label>
             <input type="url" value={link} onChange={(e) => setLink(e.target.value)} className="w-full p-3 rounded-lg border-2 border-[#DE9B72]/40 focus:border-details outline-none text-highlight3 text-sm" placeholder="https://..." />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-highlight3 uppercase tracking-wider mb-1 flex items-center gap-2">
+            <label className="text-xs font-bold text-highlight3 uppercase tracking-wider mb-1 flex items-center gap-2">
               Link da Imagem <span className="text-[9px] text-highlight/60">(Opcional)</span>
             </label>
             <input type="url" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} className="w-full p-3 rounded-lg border-2 border-[#DE9B72]/40 focus:border-details outline-none text-highlight3 text-sm" placeholder="URL da foto do produto..." />

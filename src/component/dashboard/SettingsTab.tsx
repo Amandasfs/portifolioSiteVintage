@@ -29,6 +29,7 @@ export default function SettingsTab({ initialPix, initialToken }: SettingsTabPro
       
       if (error) throw error;
       alert("Configurações atualizadas com sucesso!");
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       alert("Erro ao salvar configurações. Verifique se o token já existe.");
     } finally {
