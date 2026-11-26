@@ -253,97 +253,28 @@ export function usePresentes() {
         const textoMensagem =
           mensagemConvidado.trim();
 
-        let mensagemFinal =
-          textoMensagem;
+        const groupId = sessionStorage.getItem("guest_group_id");
+        const { error } = await supabase.rpc("send_guest_letter", {
+          p_kind: reservaPendente.tipo,
+          p_gift: reservaPendente.tipo === "skip" ? null : reservaPendente.id,
+          p_group: groupId,
+          p_message: textoMensagem,
+          p_author: nomeConvidado.trim(),
+        });
+        if (error) throw error;
 
-        if (
-          textoMensagem &&
-          nomeConvidado.trim()
-        ) {
-          mensagemFinal =
-            `${textoMensagem}\n\n- Com carinho, ${nomeConvidado.trim()}`;
-        }
-
-        const groupId =
-          localStorage.getItem(
-            "guest_group_id",
-          );
-
-        if (
-          reservaPendente.tipo ===
-          "skip"
-        ) {
-          if (
-            groupId &&
-            mensagemFinal
-          ) {
-            await supabase
-              .from(
-                "vw_guest_groups",
-              )
-              .update({
-                guest_message:
-                  mensagemFinal,
-              })
-              .eq(
-                "id",
-                groupId,
-              );
-          }
-
-          setMensagemSucesso(
-            "Presença confirmada com sucesso!",
-          );
-
-          setPresenteSelecionado(
-            "skip",
-          );
-
-          setReservaPendente(
-            null,
-          );
-
+        if (reservaPendente.tipo === "skip") {
+          setMensagemSucesso("Presença confirmada com sucesso!");
+          setPresenteSelecionado("skip");
+          setReservaPendente(null);
           return;
         }
-
-        if (
-          reservaPendente.tipo ===
-          "pix"
-        ) {
-          const payload =
-            gerarPayloadPixLivre(
-              chavePixCasal,
-            );
-
-          setMostrarPixModal({
-            chave:
-              chavePixCasal,
-            nomePresente:
-              reservaPendente.nome,
-            payload,
-          });
-
-          setReservaPendente(
-            null,
-          );
-
+        if (reservaPendente.tipo === "pix") {
+          setMostrarPixModal({ chave: chavePixCasal, nomePresente: reservaPendente.nome,
+            payload: gerarPayloadPixLivre(chavePixCasal) });
+          setReservaPendente(null);
           return;
         }
-
-        await supabase
-          .from("vw_gifts")
-          .update({
-            is_reserved: true,
-            reservation_type:
-              "compra",
-            guest_message:
-              mensagemFinal ||
-              null,
-          })
-          .eq(
-            "id",
-            reservaPendente.id,
-          );
 
         setPresentes((prev) =>
           prev.map((item) =>

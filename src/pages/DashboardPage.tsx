@@ -8,6 +8,7 @@ import type { Guest, GuestGroup, GiftItem, TabType } from "../types/guest";
 import GuestListTab from "../component/dashboard/GuestListTab";
 import ManageGroupsTab from "../component/dashboard/ManageGroupsTab";
 import ManageGiftsTab from "../component/dashboard/ManageGiftsTab";
+import LettersTab from "../component/dashboard/LettersTab";
 import SettingsTab from "../component/dashboard/SettingsTab";
 
 export default function DashboardPage() {
@@ -107,7 +108,8 @@ export default function DashboardPage() {
         {/* Botão de Sair Alinhado à Direita */}
         <div className="flex items-center bg-white/50 backdrop-blur-sm border border-[#DE9B72]/30 rounded-xl p-2.5 shadow-md self-end md:self-center">
           <button 
-            onClick={() => {
+            onClick={async () => {
+              await supabase.auth.signOut();
               localStorage.removeItem('casamento_role');
               localStorage.removeItem('couple_id');
               navigate('/');
@@ -128,6 +130,7 @@ export default function DashboardPage() {
             { id: 'geral', label: 'Lista de Presença', icon: <TrendingUp size={16} /> },
             { id: 'familias', label: 'Gerenciar Grupos', icon: <Users size={16} /> },
             { id: 'presentes', label: 'Lista de Presentes', icon: <Gift size={16} /> },
+            { id: 'cartas', label: 'Cartas dos Convidados', icon: <span aria-hidden="true">✉</span> },
             { id: 'config', label: 'Configurações', icon: <Settings size={16} /> }
           ].map((tab) => (
             <button
@@ -158,6 +161,7 @@ export default function DashboardPage() {
             {activeTab === 'geral' && <GuestListTab confirmados={confirmados} pendentes={pendentes} />}
             {activeTab === 'familias' && <ManageGroupsTab groups={groups} onRefresh={fetchDashboardData} />}
             {activeTab === 'presentes' && <ManageGiftsTab gifts={gifts} onRefresh={fetchDashboardData} />}
+            {activeTab === 'cartas' && <LettersTab />}
             {activeTab === 'config' && <SettingsTab initialPix={couplePix} initialToken={coupleToken} />}
           </div>
         )}

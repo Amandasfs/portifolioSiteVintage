@@ -50,4 +50,5 @@ export type TabType =
   | "geral"
   | "familias"
   | "presentes"
-  | "config";
+  | "config"
+  | "cartas";

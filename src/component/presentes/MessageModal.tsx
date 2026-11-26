@@ -227,6 +227,7 @@ export default function MessageModal({
                   Sua mensagem aos noivos
                 </label>
                 <textarea
+                  maxLength={3000}
                   value={mensagemConvidado}
                   onChange={(e) => onMensagemChange(e.target.value)}
                   placeholder="Escreva aqui uma mensagem especial..."
@@ -272,6 +273,7 @@ export default function MessageModal({
                 </label>
                 <input
                   type="text"
+                  maxLength={255}
                   value={nomeConvidado}
                   onChange={(e) => onNomeChange(e.target.value)}
                   placeholder="Seu nome"
