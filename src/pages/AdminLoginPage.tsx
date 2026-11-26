@@ -5,27 +5,24 @@ import velaImage from "../assets/img/velap.png";
 import { supabase } from "../config/supabase";
 
 export default function AdminLoginPage() {
+  const [email, setEmail] = useState("");
   const [token, setToken] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    if (!token.trim()) return;
+    if (!email.trim() || !token) return;
     setLoading(true);
     setErrorMsg("");
 
     try {
-      const { data: couple, error } = await supabase
-        .from('vw_couples')
-        .select('*')
-        .eq('access_token', token.trim().toUpperCase())
-        .maybeSingle();
-
-      if (error) throw error;
-
-      if (!couple) {
-        setErrorMsg("Token inválido. Verifique o código de acesso.");
+      const { error: loginError } = await supabase.auth.signInWithPassword({ email: email.trim(), password: token });
+      if (loginError) { setErrorMsg("E-mail ou senha inválidos."); return; }
+      const { data: couple, error } = await supabase.rpc('get_letter_admin_couple').single<{ id: string; names: string }>();
+      if (error || !couple) {
+        await supabase.auth.signOut();
+        setErrorMsg("Conta não vinculada ao casal.");
         return;
       }
 
@@ -138,11 +135,13 @@ export default function AdminLoginPage() {
                 {/* Campo de input - MAIS COMPACTO */}
                 <div className="relative group mb-4 sm:mb-5 w-full max-w-[260px] sm:max-w-xs mx-auto">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-[#DE9B72]/20 to-[#DE9B72]/5 rounded-lg blur opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <input type="email" autoComplete="username" placeholder="E-MAIL" value={email} onChange={e => setEmail(e.target.value)} className="w-full mb-3 px-4 py-3 rounded-lg border border-[#DE9B72]/30 bg-black/40 text-[#f9e4b7] text-center" />
                   <input
+                    autoComplete="current-password"
                     type="password"
-                    placeholder="CHAVE DE ACESSO"
+                    placeholder="SENHA"
                     value={token}
-                    onChange={(e) => setToken(e.target.value.toUpperCase())}
+                    onChange={(e) => setToken(e.target.value)}
                     className="relative w-full px-4 py-3 sm:py-3.5 rounded-lg border border-[#DE9B72]/30 bg-black/40 text-[#f9e4b7] placeholder-[#DE9B72]/30 focus:outline-none focus:border-[#DE9B72]/60 focus:bg-black/60 text-center tracking-[0.3em] text-xs sm:text-sm shadow-inner transition-all duration-300"
                   />
                   <div className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 text-[#DE9B72]/30 group-focus-within:text-[#DE9B72]/60 transition-colors">
@@ -169,7 +168,7 @@ export default function AdminLoginPage() {
                 {/* Botão de login - MAIS COMPACTO */}
                 <button
                   onClick={handleLogin}
-                  disabled={loading || !token.trim()}
+                  disabled={loading || !email.trim() || !token}
                   className="relative w-full max-w-[260px] sm:max-w-xs mx-auto group overflow-hidden block"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-[#DE9B72]/20 to-[#DE9B72]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-lg"></div>

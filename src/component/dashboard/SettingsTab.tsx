@@ -4,26 +4,21 @@ import { supabase } from "../../config/supabase";
 
 interface SettingsTabProps {
   initialPix: string;
-  initialToken: string;
 }
 
-export default function SettingsTab({ initialPix, initialToken }: SettingsTabProps) {
+export default function SettingsTab({ initialPix }: SettingsTabProps) {
   const [couplePix, setCouplePix] = useState(initialPix);
-  const [coupleToken, setCoupleToken] = useState(initialToken);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     setCouplePix(initialPix);
-    setCoupleToken(initialToken);
-  }, [initialPix, initialToken]);
+  }, [initialPix]);
 
   const handleSaveConfig = async () => {
-    if (!coupleToken.trim()) return alert("O token de acesso não pode ficar vazio.");
     setSaving(true);
     try {
       const coupleId = localStorage.getItem('couple_id');
       const { error } = await supabase.from('vw_couples').update({
-        access_token: coupleToken.trim().toUpperCase(),
         pix_key: couplePix.trim()
       }).eq('id', coupleId);
       
@@ -31,7 +26,7 @@ export default function SettingsTab({ initialPix, initialToken }: SettingsTabPro
       alert("Configurações atualizadas com sucesso!");
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
-      alert("Erro ao salvar configurações. Verifique se o token já existe.");
+      alert("Erro ao salvar configurações.");
     } finally {
       setSaving(false);
     }
@@ -48,11 +43,6 @@ export default function SettingsTab({ initialPix, initialToken }: SettingsTabPro
           <label className="block text-xs font-bold text-highlight3 uppercase tracking-wider mb-2">Chave PIX (Para receber os presentes)</label>
           <input type="text" value={couplePix} onChange={(e) => setCouplePix(e.target.value)} className="w-full p-4 rounded-lg border-2 border-[#DE9B72]/40 focus:border-details outline-none font-bold text-highlight3 text-lg" placeholder="E-mail, CPF, Telefone ou Chave Aleatória" />
           <p className="text-[10px] text-highlight/80 mt-1 uppercase tracking-widest font-bold">Usada para gerar o QR Code na tela de presentes.</p>
-        </div>
-
-        <div>
-          <label className="block text-xs font-bold text-highlight3 uppercase tracking-wider mb-2">Senha / Token de Acesso do Painel</label>
-          <input type="text" value={coupleToken} onChange={(e) => setCoupleToken(e.target.value.toUpperCase())} className="w-full p-4 rounded-lg border-2 border-[#DE9B72]/40 focus:border-details outline-none font-bold tracking-[0.3em] text-highlight3 text-lg uppercase" />
         </div>
 
         <div className="flex justify-end pt-4 border-t border-[#DE9B72]/30">

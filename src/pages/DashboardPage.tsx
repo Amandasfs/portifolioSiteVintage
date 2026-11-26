@@ -21,7 +21,6 @@ export default function DashboardPage() {
   const [gifts, setGifts] = useState<GiftItem[]>([]);
   const [allGuests, setAllGuests] = useState<Guest[]>([]);
   const [couplePix, setCouplePix] = useState("");
-  const [coupleToken, setCoupleToken] = useState("");
 
   const fetchDashboardData = async () => {
     setLoading(true);
@@ -32,7 +31,6 @@ export default function DashboardPage() {
         const { data: coupleData } = await supabase.from('vw_couples').select('*').eq('id', coupleId).single();
         if (coupleData) {
           setCouplePix(coupleData.pix_key || "");
-          setCoupleToken(coupleData.access_token || "");
         }
       }
 
@@ -162,7 +160,7 @@ export default function DashboardPage() {
             {activeTab === 'familias' && <ManageGroupsTab groups={groups} onRefresh={fetchDashboardData} />}
             {activeTab === 'presentes' && <ManageGiftsTab gifts={gifts} onRefresh={fetchDashboardData} />}
             {activeTab === 'cartas' && <LettersTab />}
-            {activeTab === 'config' && <SettingsTab initialPix={couplePix} initialToken={coupleToken} />}
+            {activeTab === 'config' && <SettingsTab initialPix={couplePix} />}
           </div>
         )}
       </div>
